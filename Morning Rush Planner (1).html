@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Morning Rush Planner</title>
+<style>
+:root{--bg:#f4f2ed;--card:#fff;--ink:#1d2730;--mut:#68727c;--line:#e6e2d9;--acc:#1f6f5c;--accfg:#fff;--g:#2f855a;--a:#b7791f;--r:#b83a3a;--b:#2b6cb0;--n:#9aa3ab;--gs:#e6f2ea;--as:#fbf1de;--rs:#fae8e6;--bs:#e6eff9;--ns:#eef0f2;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181c;--card:#1d242b;--ink:#eef1f3;--mut:#9aa5ae;--line:#2b343c;--acc:#5ec2a6;--accfg:#10231d;--g:#6cc596;--a:#e2ad5a;--r:#ee8a82;--b:#7fb2e8;--gs:#1b3328;--as:#38301c;--rs:#3b2220;--bs:#1c2e42;--ns:#252d34}}
+:root[data-theme="dark"]{--bg:#14181c;--card:#1d242b;--ink:#eef1f3;--mut:#9aa5ae;--line:#2b343c;--acc:#5ec2a6;--accfg:#10231d;--g:#6cc596;--a:#e2ad5a;--r:#ee8a82;--b:#7fb2e8;--gs:#1b3328;--as:#38301c;--rs:#3b2220;--bs:#1c2e42;--ns:#252d34}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100%;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.presets{display:flex;gap:6px;overflow-x:auto;padding:10px 14px;scrollbar-width:none;max-width:460px;margin:0 auto}
+.presets::-webkit-scrollbar{display:none}
+.presets button{flex:none;border:1px solid var(--line);background:none;color:var(--mut);font:inherit;font-size:12px;padding:6px 11px;border-radius:16px;cursor:pointer;white-space:nowrap}
+.presets button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cap{max-width:460px;margin:0 auto;padding:0 18px 6px;font-size:11px;color:var(--mut)}
+.phone{max-width:460px;margin:0 auto;padding:6px 16px 28px;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.phone{animation:none}}
+.top{display:flex;justify-content:space-between;align-items:baseline;padding:8px 4px 12px}
+.top b{font-size:15px;font-weight:600}.top span{font-size:12.5px;color:var(--mut)}
+.banner{border-radius:14px;padding:11px 14px;margin-bottom:12px;font-size:13.5px;line-height:1.4}
+.banner b{display:block;font-size:14px;margin-bottom:1px}
+.t-g{background:var(--gs)}.t-a{background:var(--as)}.t-r{background:var(--rs)}.t-b{background:var(--bs)}
+.hero{background:var(--card);border-radius:22px;padding:22px 22px 20px;box-shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(30,40,50,.06)}
+.lab{font-size:11.5px;font-weight:600;letter-spacing:.09em;color:var(--mut)}
+.big{font-size:76px;line-height:1;font-weight:600;letter-spacing:-.03em;margin-top:4px;font-variant-numeric:tabular-nums}
+.big small,.mid small{font-size:.28em;font-weight:500;color:var(--mut);margin-left:5px;letter-spacing:0}
+.mid{font-size:44px;line-height:1.05;font-weight:600;letter-spacing:-.02em;margin-top:3px;font-variant-numeric:tabular-nums}
+.was{font-size:12.5px;color:var(--mut);margin-top:4px;text-decoration:line-through;text-decoration-color:var(--n)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.meta{font-size:12.5px;color:var(--mut);margin-top:3px}
+.dur{margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;font-size:14.5px;font-weight:600}
+.dur span{font-weight:400;color:var(--mut);font-size:13px}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:4px 10px;border-radius:12px;margin-top:12px}
+.why{margin:18px 4px 0;padding:0;list-style:none}
+.why li{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;line-height:1.4;padding:6px 0}
+.why i{flex:none;width:9px;height:9px;border-radius:50%;margin-top:7px}
+.d-g{background:var(--g)}.d-a{background:var(--a)}.d-r{background:var(--r)}.d-n{background:var(--n)}.d-b{background:var(--b)}
+.watch{margin:14px 0 0;background:var(--ns);border-radius:14px;padding:12px 14px;font-size:13.5px;line-height:1.45;color:var(--mut)}
+.watch b{display:block;color:var(--ink);font-size:12px;letter-spacing:.06em;font-weight:600;margin-bottom:2px}
+.cta{display:block;width:100%;margin-top:18px;border:0;border-radius:16px;background:var(--acc);color:var(--accfg);font:inherit;font-size:17px;font-weight:600;padding:17px;cursor:pointer}
+.cta:active{transform:scale(.99)}
+.link{display:block;margin:12px auto 0;border:0;background:none;color:var(--mut);font:inherit;font-size:13.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+details.more{margin-top:14px;border-top:1px solid var(--line);padding-top:4px}
+details.more summary{list-style:none;cursor:pointer;text-align:center;font-size:14px;font-weight:600;color:var(--acc);padding:12px}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary:after{content:" ▾"}details.more[open] summary:after{content:" ▴"}
+.step{display:grid;grid-template-columns:54px 1fr;gap:6px;padding:9px 4px;font-size:14.5px;border-bottom:1px solid var(--line)}
+.step time{color:var(--mut);font-variant-numeric:tabular-nums}.step small{display:block;color:var(--mut);font-size:12.5px;margin-top:1px}
+.h{font-size:11.5px;font-weight:600;letter-spacing:.09em;color:var(--mut);margin:18px 4px 4px}
+.alt{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:14px;padding:12px 14px;margin-top:8px;font-size:14px}
+.alt small{display:block;color:var(--mut);font-size:12.5px}.alt b{font-variant-numeric:tabular-nums}
+
+html,body{height:100%;overflow:hidden;margin:0}body{padding:0;background:#dfe3e7}
+:root{--bl:#1a73e8;--blb:#e8f0fe}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bl:#8ab4f8;--blb:#2a3a52}body{background:#0b0e11}}
+.app{position:relative;max-width:430px;height:100dvh;margin:0 auto;background:var(--bg);overflow:hidden;--sh:178px;box-shadow:0 0 40px rgba(0,0,0,.18)}
+#map{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:none}
+[data-tab=map] #map,[data-tab=tube] #map{display:block}
+.view{position:absolute;inset:0;overflow-y:auto;padding:env(safe-area-inset-top,0px) 0 calc(80px + env(safe-area-inset-bottom,0px))}
+[data-tab=map] .view,[data-tab=tube] .view{display:none}
+.ov{display:none}[data-tab=map] .ov,[data-tab=tube] .ov{display:block}
+.phone{margin:0 auto;animation:none}
+.nav{position:absolute;left:0;right:0;bottom:0;height:calc(64px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--card);border-top:1px solid var(--line);display:flex;z-index:30}
+.nav button{flex:1;border:0;background:none;color:var(--mut);font-family:inherit;font-size:11.5px;font-weight:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+.nav svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nav .ic{width:58px;height:30px;border-radius:15px;display:flex;align-items:center;justify-content:center}
+.nav button.on{color:var(--ink)}.nav button.on .ic{background:var(--blb);color:var(--bl)}
+#mtop{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:10px;right:10px;z-index:10}
+[data-tab=tube] #mtop{display:none}[data-tab=map] #ttop{display:none}
+.search{width:100%;display:flex;align-items:center;gap:10px;background:var(--card);border:0;border-radius:28px;padding:8px 12px;box-shadow:0 2px 8px rgba(60,64,67,.3);font-family:inherit;color:var(--ink);text-align:left;cursor:pointer}
+.search b{display:block;font-size:15px;font-weight:600}.search small{color:var(--mut);font-size:12.5px}.search>span:nth-child(2){flex:1}
+.bk{font-size:28px;color:var(--mut);line-height:1;padding:0 4px 3px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--acc);color:var(--accfg);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px 2px 6px;align-items:center}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:6px;border:0;background:var(--card);color:var(--ink);font-family:inherit;font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:18px;box-shadow:0 1px 5px rgba(60,64,67,.3);cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--blb);color:var(--bl);box-shadow:inset 0 0 0 1.5px var(--bl)}.chip.info{background:var(--bs);cursor:default}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;display:inline-block}
+#ttop{position:absolute;top:0;left:0;right:0;z-index:10;background:#0019a8;color:#fff;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px}
+.tt{font-size:19px;font-weight:700}.ts{font-size:12.5px;opacity:.85;margin-top:2px}
+#prov{position:absolute;left:10px;right:10px;z-index:9;display:none}
+[data-tab=map] #prov{top:calc(env(safe-area-inset-top,0px) + 100px)}
+[data-tab=tube] #prov{top:calc(env(safe-area-inset-top,0px) + 66px);left:0;right:0;background:var(--card);padding:2px 10px 6px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mut);padding:2px 6px 0}.leg i{flex:1;height:6px;border-radius:3px;background:linear-gradient(90deg,#d73027,#f46d43,#fee08b,#a6d96a,#1a9850);max-width:150px}
+[data-tab=map] .leg{background:var(--card);border-radius:10px;width:max-content;padding:4px 8px;margin-top:2px;box-shadow:0 1px 4px rgba(60,64,67,.3)}
+.fabs{position:absolute;right:10px;bottom:calc(var(--sh) + 64px + env(safe-area-inset-bottom,0px) + 12px);display:flex;flex-direction:column;gap:8px;z-index:12;transition:bottom .25s}
+.fabs button{width:44px;height:44px;border-radius:50%;border:0;background:var(--card);color:var(--mut);font-size:20px;box-shadow:0 1px 5px rgba(60,64,67,.35);cursor:pointer}
+.sheet{position:absolute;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));height:var(--sh);background:var(--card);border-radius:20px 20px 0 0;box-shadow:0 -2px 10px rgba(60,64,67,.25);z-index:15;display:flex;flex-direction:column;transition:height .25s ease}
+.grab{padding:10px 0 8px;cursor:pointer}.grab i{display:block;width:36px;height:4px;border-radius:2px;background:var(--line);margin:auto}
+#shc{flex:1;overflow-y:auto;padding:0 18px 18px}.sheet.peek .full-only{display:none}
+.sh-t{font-size:26px;font-weight:600;letter-spacing:-.01em}.sh-t small{font-size:13px;color:var(--mut);margin-left:6px;font-weight:400}.sh-s{color:var(--mut);font-size:14px;margin-top:2px}
+.cond{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.cond span{font-size:12.5px;padding:5px 10px;border-radius:12px;background:var(--ns)}
+.note{border-radius:12px;padding:9px 12px;margin-top:10px;font-size:13.5px;line-height:1.4}
+.leg-r{display:grid;grid-template-columns:48px 6px 1fr auto;gap:10px;align-items:stretch;padding:10px 0}.leg-r time{color:var(--mut);font-size:13px;font-variant-numeric:tabular-nums}.leg-r i{border-radius:3px}.leg-r small{display:block;color:var(--mut);font-size:12.5px}
+.sg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut);align-self:center}.sg u{width:9px;height:9px;border-radius:50%}
+.stt{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}.stt i{width:6px;height:30px;border-radius:2px}.stt span{flex:1}.stt small{display:block;color:var(--mut);font-size:12px}
+.sub{font-size:12px;color:var(--mut);margin:12px 0 0}
+.card{position:absolute;left:12px;right:66px;bottom:calc(var(--sh) + 64px + env(safe-area-inset-bottom,0px) + 12px);z-index:14;background:var(--card);border-radius:16px;padding:14px;box-shadow:0 2px 12px rgba(60,64,67,.35);display:none}
+.card h3{margin:0;font-size:15px}.card p{margin:2px 0 6px;font-size:12px;color:var(--mut)}.card .x{position:absolute;right:8px;top:6px;border:0;background:none;font-size:20px;color:var(--mut);cursor:pointer}
+.pr{display:flex;align-items:center;gap:8px;font-size:13px;margin-top:8px}.pr .nm{width:68px}.pr .bars{display:flex;gap:2px;align-items:flex-end;height:14px}.pr .bars i{width:4px;background:var(--line);border-radius:1px}.pr .v{margin-left:auto;color:var(--mut);font-size:12px}
+.why li.go{cursor:pointer}.why li em{margin-left:auto;font-style:normal;color:var(--mut);font-size:20px;line-height:1}
+.two2{display:flex;gap:8px;margin-top:14px}.two2 button{flex:1;border:1px solid var(--line);background:none;color:var(--bl);border-radius:14px;padding:11px;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+</style></head><body>
+<div class="app" id="app" data-tab="plan">
+<canvas id="map"></canvas>
+<section class="view" id="v-plan"><nav class="presets" id="pre" aria-label="Preview scenario"></nav><div class="cap">Prototype: pick a scenario to preview each state · simulated data</div><main class="phone" id="plan"></main></section>
+<div class="ov">
+ <div id="mtop"><button class="search" id="srch"></button><div class="chips" id="mchips"></div></div>
+ <div id="ttop"><div class="tt">Tube map</div><div class="ts" id="tsub"></div></div>
+ <div id="prov"></div>
+ <div class="fabs"><button id="fit" aria-label="Recentre">◎</button><button id="zi" aria-label="Zoom in">+</button><button id="zo" aria-label="Zoom out">−</button></div>
+ <div id="card" class="card"></div>
+ <div id="sheet" class="sheet peek"><div class="grab" id="grab"><i></i></div><div id="shc"></div></div>
+</div>
+<nav class="nav" id="nav">
+ <button data-t="plan" class="on"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></span>Plan</button>
+ <button data-t="map"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>Map</button>
+ <button data-t="tube"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M2.5 12h19"/></svg></span>Tube</button>
+</nav></div>
+<script>
+const KX=69.2,KY=111.2,W=58.1,H=46.7,CS=.3,GW=Math.ceil(W/CS),GH=Math.ceil(H/CS);
+const P=(lo,la)=>[(lo+.51)*KX,(51.70-la)*KY];
+const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const lat=(s,n)=>{const r=rng(s),a=[];for(let i=0;i<n*n;i++)a.push(r());return(x,y)=>{x=(x%n+n)%n;y=(y%n+n)%n;const i=Math.floor(x),j=Math.floor(y),fx=x-i,fy=y-j,u=fx*fx*(3-2*fx),v=fy*fy*(3-2*fy),g=(a,b)=>a[((j+b)%n)*n+(i+a_)%n],h=(dx,dy)=>a[((j+dy)%n)*n+(i+dx)%n];return h(0,0)*(1-u)*(1-v)+h(1,0)*u*(1-v)+h(0,1)*(1-u)*v+h(1,1)*u*v}};
+const PROV={
+ ee:{name:'EE',c:'#00a5a3',seed:11,n:900,p:2,ns:5},
+ vf:{name:'Vodafone',c:'#e60000',seed:22,n:820,p:0,ns:6},
+ o2:{name:'O2',c:'#1c3fd1',seed:33,n:830,p:.5,ns:7},
+ th:{name:'Three',c:'#333',seed:44,n:650,p:-1.5,ns:8},
+ bt:{name:'BT Mobile',c:'#7a2bd1',seed:11,n:900,p:.5,ns:9,sub:'EE network'}
+};
+const BEST={name:'All networks (best)',c:'linear-gradient(135deg,#00a5a3,#e60000,#1c3fd1,#7a2bd1)'};
+const noise={};Object.values(PROV).forEach(p=>noise[p.ns]=lat(p.ns*7,40));
+const C0=P(-.11,51.51),B=[[-.02,51.505,.5,2.5],[-.1,51.375,.45,2.5],[-.45,51.47,.25,2],[0,51.54,.3,2],[-.3,51.41,.2,2]].map(b=>[...P(b[0],b[1]),b[2],b[3]]);
+const dens=(x,y)=>{let d=.12+Math.exp(-Math.hypot(x-C0[0],y-C0[1])/8);for(const b of B)d+=b[2]*Math.exp(-Math.hypot(x-b[0],y-b[1])/b[3]);return d/1.7};
+let tech='4G',sel='best',cache={},imgs={};
+function build(k){
+ const key=k+tech;if(cache[key])return cache[key];
+ let g;
+ if(k==='best'){g=new Float32Array(GW*GH).fill(-140);for(const q in PROV){const a=build(q);for(let i=0;i<g.length;i++)if(a[i]>g[i])g[i]=a[i]}return cache[key]=g}
+ const pr=PROV[k],r=rng(pr.seed+(tech==='5G'?100:0)),tw=[],f=tech==='5G';
+ while(tw.length<pr.n*(f?.5:1)){const x=r()*W,y=r()*H,d=dens(x,y);if(r()<(f?d*d*1.5:d))tw.push([x,y,-92+pr.p+(r()-.5)*8+(f?-4:0)])}
+ const nz=noise[pr.ns];g=new Float32Array(GW*GH);
+ for(let j=0;j<GH;j++)for(let i=0;i<GW;i++){const x=(i+.5)*CS,y=(j+.5)*CS;let b=-140;
+  for(const t of tw){const dx=x-t[0];if(dx>9||dx<-9)continue;const dy=y-t[1];if(dy>9||dy<-9)continue;const s=t[2]-32*Math.log10(Math.max(Math.hypot(dx,dy),.04));if(s>b)b=s}
+  g[j*GW+i]=b+(nz(x/1.6,y/1.6)-.5)*14-(k==='bt'?1.5:0)}
+ return cache[key]=g}
+const stops=[[215,48,39],[244,109,67],[254,224,139],[166,217,106],[26,152,80]],sp=[0,.25,.5,.75,1];
+function col(d){const t=Math.max(0,Math.min(1,(d+118)/53));let i=0;while(i<3&&t>sp[i+1])i++;const u=(t-sp[i])/(sp[i+1]-sp[i]),a=stops[i],b=stops[i+1];return[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u,a[2]+(b[2]-a[2])*u,d<-122?0:d<-114?(d+122)/8*210:210]}
+function heat(k){const key=k+tech;if(imgs[key])return imgs[key];const g=build(k),c=document.createElement('canvas');c.width=GW;c.height=GH;const x=c.getContext('2d'),im=x.createImageData(GW,GH);
+ for(let i=0;i<g.length;i++){const q=col(g[i]),lo=(i%GW+.5)*CS/KX-.51,la=51.70-(Math.floor(i/GW)+.5)*CS/KY;q[3]*=clamp((1.18-Math.hypot((lo+.14)/.37,(la-51.495)/.195))/.2,0,1);im.data.set(q,i*4)}x.putImageData(im,0,0);return imgs[key]=c}
+function cov(k){const g=build(k);let n=0,t=0;for(let j=0;j<GH;j++)for(let i=0;i<GW;i++)if(Math.hypot((i+.5)*CS-C0[0],(j+.5)*CS-C0[1])<20){t++;if(g[j*GW+i]>-100)n++}return Math.round(100*n/t)}
+// ---- base map data
+const L=a=>a.map(p=>P(p[0],p[1]));
+const thames=L([[-.4,51.4],[-.337,51.403],[-.307,51.409],[-.31,51.44],[-.307,51.461],[-.29,51.485],[-.23,51.488],[-.216,51.466],[-.16,51.482],[-.125,51.486],[-.122,51.5],[-.115,51.508],[-.104,51.51],[-.075,51.505],[-.05,51.5],[-.035,51.507],[-.02,51.487],[-.005,51.485],[.0,51.5],[.02,51.505],[.06,51.5],[.12,51.51],[.17,51.5],[.2,51.485],[.26,51.465],[.33,51.455]]);
+const parks=[[-.165,51.507,1.3,.5,'Hyde Park'],[-.155,51.527,.9,.7,"Regent's Park"],[-.28,51.44,2.4,1.9,'Richmond Park'],[-.158,51.563,1.9,1,'Hampstead Heath'],[-.23,51.43,1.6,1,'Wimbledon Common'],[-.34,51.41,1.5,1,'Bushy Park'],[.0,51.477,.9,.6,'Greenwich Park'],[-.04,51.585,.8,3.2,'Lee Valley'],[-.04,51.536,.8,.5,'Victoria Park'],[-.12,51.46,.7,.5,'Brockwell'],[-.17,51.47,.9,.6,'Battersea Park'],[.05,51.45,1.3,.9,'Eltham']].map(p=>[...P(p[0],p[1]),p[2],p[3],p[4]]);
+const ell=(cx,cy,rx,ry,n,w)=>{const a=[];for(let i=0;i<=n;i++){const t=i/n*6.283,k=1+(w||0)*Math.sin(t*5)*.03;a.push(P(cx+rx*Math.cos(t)*k,cy+ry*Math.sin(t)*k))}return a};
+const m25=ell(-.14,51.495,.37,.195,90,1);
+const roads=[[[-.51,51.47],[-.3,51.49],[-.2,51.505],[-.11,51.51]],[[-.5,51.55],[-.35,51.54],[-.2,51.525],[-.11,51.51]],[[-.25,51.69],[-.2,51.6],[-.16,51.56],[-.11,51.51]],[[-.03,51.69],[-.06,51.6],[-.08,51.55],[-.1,51.51]],[[.25,51.62],[.1,51.58],[-.02,51.54],[-.09,51.515]],[[.33,51.5],[.15,51.51],[.0,51.51],[-.09,51.508]],[[.28,51.43],[.1,51.45],[-.03,51.48],[-.1,51.5]],[[-.15,51.29],[-.12,51.38],[-.11,51.45],[-.11,51.495]],[[-.35,51.32],[-.25,51.4],[-.17,51.46],[-.12,51.5]],[[-.51,51.4],[-.4,51.42],[-.3,51.41]]].map(L);
+const places=[[-.12,51.508,'Westminster',1],[-.09,51.514,'City of London',1],[-.14,51.539,'Camden Town',1],[-.103,51.536,'Islington',1],[-.055,51.545,'Hackney',1],[0,51.541,'Stratford',1],[-.02,51.505,'Canary Wharf',1],[-.0,51.482,'Greenwich',1],[-.01,51.46,'Lewisham',2],[-.115,51.46,'Brixton',2],[-.14,51.462,'Clapham',2],[-.2,51.424,'Wimbledon',1],[-.1,51.372,'Croydon',1],[-.3,51.46,'Richmond',1],[-.3,51.41,'Kingston',1],[-.225,51.492,'Hammersmith',2],[-.3,51.513,'Ealing',1],[-.286,51.556,'Wembley',2],[-.335,51.58,'Harrow',1],[-.2,51.65,'Barnet',1],[-.08,51.652,'Enfield',1],[-.02,51.59,'Walthamstow',2],[.07,51.56,'Ilford',1],[.18,51.575,'Romford',1],[.02,51.405,'Bromley',1],[-.45,51.47,'Heathrow',1],[-.48,51.546,'Uxbridge',1],[-.19,51.36,'Sutton',2],[.15,51.46,'Bexleyheath',2],[-.36,51.468,'Hounslow',2],[-.19,51.5,'Kensington',2],[-.17,51.487,'Chelsea',2],[-.178,51.556,'Hampstead',2],[-.07,51.588,'Tottenham',2],[.07,51.5,'Woolwich',2],[-.1,51.58,'Wood Green',2]].map(p=>[...P(p[0],p[1]),p[2],p[3]]);
+
+const m=s=>{const a=s.split(':');return +a[0]*60+ +a[1]},f=n=>((Math.floor(n/60)%12)||12)+':'+String(n%60).padStart(2,'0'),ap=n=>n%1440<720?'AM':'PM';
+const T=(n,c)=>`${f(n)}<small>${ap(n)}</small>`;
+const D0=[[4,'Walk to the bus stop','3–5 min'],[17,'Bus 159 to Waterloo','15–22 min'],[13,'Jubilee line to Canary Wharf','12–14 min'],[4,'Walk to your desk','3–5 min']];
+const base={wake:'6:55',leave:'7:52',arr:'8:30',due:'8:45',dur:38,rng:'35–42',tone:'',why:[['g','Dry on your walk.'],['g','Jubilee line is running normally.'],['n','Traffic is moderate.'],['g','10 min reliability buffer included.']],watch:'A Jubilee line delay is the main thing that could move this. We’ll re-check at 7:22.',cta:'Start my morning',steps:D0};
+const S={
+normal:{l:'Normal morning'},
+rain:{l:'Bad weather',banner:['a','Rain 7:40–9:00','Heavy at times on your walk.'],oldW:'6:55',oldL:'7:52',wake:'6:50',leave:'7:47',dur:43,rng:'40–47',pill:['a','5 min earlier than usual'],why:[['a','Rain adds 5 min to your walk.'],['g','Jubilee line is running normally.'],['n','Traffic is moderate.'],['g','10 min reliability buffer included.']],watch:'If the rain eases before 7:30 we’ll give some of that time back.',steps:[[7,'Walk to the bus stop','6–9 min'],D0[1],D0[2],[6,'Walk to your desk','5–8 min']]},
+dis:{l:'Disruption',banner:['r','Jubilee line: severe delays','Signal failure. We’ve switched you to Waterloo & City + DLR.'],oldW:'6:55',oldL:'7:52',wake:'6:41',leave:'7:38',dur:52,rng:'48–60',pill:['a','14 min earlier than usual'],why:[['r','Jubilee line has severe delays.'],['a','Rerouted via Bank and DLR, +14 min.'],['n','Traffic is moderate.'],['g','10 min reliability buffer included.']],watch:'If the Jubilee line recovers, we’ll tell you before you leave. You could then sleep a little longer.',steps:[D0[0],D0[1],[5,'Waterloo & City line to Bank','4–6 min'],[8,'Change at Bank','6–10 min'],[14,'DLR to Canary Wharf','12–16 min'],D0[3]]},
+traf:{l:'Heavy traffic',banner:['a','Heavy traffic on your bus route','Roadworks near Elephant & Castle.'],oldW:'6:55',oldL:'7:52',wake:'6:48',leave:'7:45',dur:45,rng:'41–52',pill:['a','7 min earlier than usual'],why:[['a','Heavy traffic adds 7 min to the bus.'],['g','Jubilee line is running normally.'],['a','Traffic should ease after 8:15.'],['g','10 min reliability buffer included.']],watch:'Traffic is the least predictable part today. This is why the range is wider.',steps:[D0[0],[24,'Bus 159 to Waterloo','20–30 min'],D0[2],D0[3]]},
+long:{l:'Unusually long',banner:['a','Unusually long journey today','72 min instead of your usual 38.'],oldW:'6:55',oldL:'7:52',wake:'6:21',leave:'7:18',dur:72,rng:'65–85',pill:['a','34 min earlier than usual'],why:[['a','Road closures near Waterloo add 34 min.'],['g','Jubilee line is running normally.'],['a','Traffic is heavy around the closures.'],['g','10 min reliability buffer included.']],watch:'Waking at 6:21 is a lot. Arriving at 9:00 instead would let you wake at 6:55.',link:'Change my arrival time',steps:[D0[0],[51,'Bus 159 (diverted) to Waterloo','45–60 min'],D0[2],D0[3]]},
+late:{l:'Woke up late',now:'7:31',banner:['a','You’re 36 min behind your plan','Still doable. Here’s the quickest way to stay on time.'],leave:'8:00',dur:38,rng:'35–42',arr:'8:38',why:[['a','Getting ready in 29 min instead of 45.'],['g','Journey unchanged: 38 min, Jubilee normal.'],['a','Buffer trimmed from 10 to 5 min.'],['n','Traffic is moderate.']],watch:'Every minute after 8:00 comes off your buffer. Past 8:07 you’ll likely be late.',cta:'I’m up, let’s go',link:'Message my team I may be late'},
+fast:{l:'Journey faster',banner:['g','Quicker morning','Roads are quiet today.'],oldW:'6:55',oldL:'7:52',wake:'7:02',leave:'7:59',dur:31,rng:'29–35',pill:['g','7 min later than usual'],why:[['g','Bus is 7 min faster than usual.'],['g','Jubilee line is running normally.'],['g','Traffic is light.'],['g','10 min reliability buffer included.']],watch:'You could sleep 7 min longer. We never move your alarm later while you’re asleep.',steps:[D0[0],[10,'Bus 159 to Waterloo','9–12 min'],D0[2],D0[3]]},
+slow:{l:'Journey slower',banner:['a','Updated 7:18','Your plan moved 6 min since 6:30.'],oldL:'7:52',leave:'7:46',wake:'6:55',dur:44,rng:'40–49',pill:['a','Leave 6 min earlier than planned'],why:[['a','Bus 159 has slowed by 6 min since 6:30.'],['g','Jubilee line is running normally.'],['n','Traffic is building.'],['g','10 min reliability buffer included.']],watch:'You’re already up, so only your leave time moved. We’ll re-check at 7:30.',cta:'Got it, I’ll leave at 7:46',steps:[D0[0],[23,'Bus 159 to Waterloo','20–28 min'],D0[2],D0[3]]},
+none:{l:'No reliable route',banner:['r','No dependable route right now','Jubilee line suspended and replacement buses are unpredictable.'],oldW:'6:55',oldL:'7:52',wake:'6:08',leave:'7:05',arrT:'8:40–9:20',dur:73,rng:'55–95',tone:'n',pill:['a','Latest safe time to leave'],why:[['r','Jubilee line suspended between Waterloo and Stratford.'],['a','Replacement buses have no reliable timings.'],['a','Confidence is low. Arrival could be 8:40–9:20.'],['n','Best option shown below.']],watch:'We’ll re-check every 10 min. If a faster route opens, we’ll update you before you leave.',cta:'Plan around it',link:'Check again in 10 min',steps:[D0[0],[35,'Bus 159 to Waterloo','25–50 min'],[30,'Replacement bus to Canary Wharf','20–45 min'],D0[3]]},
+dest:{l:'Destination changed',banner:['b','Destination changed','Now going to Shoreditch office, due 9:00. Was Canary Wharf, 8:45.'],oldW:'6:55',oldL:'7:52',wake:'7:10',leave:'8:07',arr:'8:48',due:'9:00',dur:41,rng:'38–46',pill:['g','15 min later than usual'],why:[['b','New route: bus 159, then Northern line to Old Street.'],['g','Northern line is running normally.'],['n','Traffic is moderate.'],['g','10 min reliability buffer included.']],watch:'Not right? You can switch back to Canary Wharf in one tap.',link:'Switch back to Canary Wharf',steps:[D0[0],D0[1],[16,'Northern line to Old Street','14–18 min'],D0[3]]}
+};
+for(const k in S)S[k]={...base,...S[k]};
+const gs=(h,m,d)=>Math.exp(-((h-m)**2)/(2*d*d)),peak=h=>Math.min(1,.12+.9*Math.max(gs(h,8.4,1.2),gs(h,17.9,1.5))+.2*gs(h,13,2.5));
+const tc=c=>c<.35?'#34a853':c<.6?'#fbbc04':c<.8?'#ea4335':'#a50e0e',SC=['#1e8e3e','#f9ab00','#d93025','#7b1fa2'];
+const RN=['M4','A40 / M40','M1','A10','A12','A13','A2','A23 / M23','A3','A316'];
+const LINES=[['Bakerloo','#b36305'],['Central','#e32017'],['Circle','#ffd300'],['District','#00782a'],['Hammersmith & City','#f3a9bb'],['Jubilee','#a0a5a9'],['Metropolitan','#9b0056'],['Northern','#000'],['Piccadilly','#003688'],['Victoria','#0098d4'],['Waterloo & City','#95cdba'],['Elizabeth line','#6950a1'],['DLR','#00a4a7'],['Overground','#ee7c0e']];
+const INC=[[-.23,51.545,'A406 North Circular','Broken-down vehicle near Neasden','#fbbc04'],[-.065,51.512,'A13 Commercial Road','Roadworks, one lane closed','#fbbc04'],[-.12,51.455,'A23 Brixton Road','Collision, lane blocked','#ea4335'],[-.3,51.49,'A4 Great West Road','Heavy traffic near Chiswick','#fbbc04'],[0,51.505,'Blackwall Tunnel','Delays northbound','#fbbc04'],[-.17,51.52,'A40 Westway','Signal fault at junction','#34a853']].map(n=>({p:P(n[0],n[1]),t:n[2],d:n[3],c:n[4]}));
+function segs(r,f){const o=[];for(let i=0;i<r.length-1;i++)for(let k=0;k<f;k++){const a=k/f,b=(k+1)/f,A=r[i],B=r[i+1];o.push([[A[0]+(B[0]-A[0])*a,A[1]+(B[1]-A[1])*a],[A[0]+(B[0]-A[0])*b,A[1]+(B[1]-A[1])*b]])}return o}
+function trafficDraw(){if(s<4)return;const h=HR();cx.lineCap='round';cx.lineWidth=Math.max(2,.065*s);
+ for(const r of roads.concat([m25]))for(const q of segs(r,r===m25?1:8)){cx.strokeStyle=tc(cong((q[0][0]+q[1][0])/2,(q[0][1]+q[1][1])/2,h));cx.beginPath();cx.moveTo(X(q[0]),Y(q[0]));cx.lineTo(X(q[1]),Y(q[1]));cx.stroke()}
+ if(s>8)for(const n of INC){const x=X(n.p),y=Y(n.p);cx.fillStyle=n.c;cx.strokeStyle='#fff';cx.lineWidth=2;cx.beginPath();cx.arc(x,y,9,0,6.283);cx.fill();cx.stroke();cx.fillStyle='#fff';cx.font='700 12px Roboto,Arial';cx.textAlign='center';cx.textBaseline='middle';cx.fillText('!',x,y+.5)}}
+function pin(p,c){const x=X(p),y=Y(p);cx.fillStyle=c;cx.strokeStyle='#fff';cx.lineWidth=2;cx.beginPath();cx.moveTo(x,y);cx.bezierCurveTo(x-14,y-18,x-10,y-34,x,y-34);cx.bezierCurveTo(x+10,y-34,x+14,y-18,x,y);cx.fill();cx.stroke();cx.fillStyle='#fff';cx.beginPath();cx.arc(x,y-23,4,0,6.283);cx.fill()}
+const dbmAt=(k,p)=>build(k)[clamp(Math.floor(p[1]/CS),0,GH-1)*GW+clamp(Math.floor(p[0]/CS),0,GW-1)];
+// ---- geography: UK context, denser streets & landmarks
+const poly=a=>{const o=[];for(let i=0;i<a.length;i+=2)o.push(P(a[i],a[i+1]));return o};
+const GB=poly([-5.7,50.07,-5.2,49.96,-5.05,50.15,-4.65,50.33,-4.15,50.35,-3.65,50.22,-3.5,50.45,-3.4,50.6,-2.93,50.72,-2.45,50.55,-1.95,50.7,-1.4,50.8,-1.05,50.78,-.8,50.72,-.14,50.82,.25,50.73,.58,50.85,.97,50.91,1.17,51.08,1.35,51.13,1.43,51.33,1.4,51.38,1.03,51.37,.8,51.43,.55,51.43,.37,51.445,.37,51.47,.55,51.5,.72,51.54,.9,51.6,1.15,51.79,1.29,51.94,1.35,51.96,1.6,52.15,1.75,52.48,1.73,52.62,1.3,52.93,.5,52.95,.35,53.15,.2,53.5,.12,53.58,-.2,54.08,-.6,54.49,-1.15,54.63,-1.35,54.9,-1.45,55,-1.6,55.3,-1.98,55.77,-2.5,56,-2.6,56.3,-2.9,56.45,-2.45,56.7,-2.07,57.14,-1.78,57.5,-1.97,57.7,-3.4,57.7,-4,57.65,-4.1,57.85,-3,58.15,-3.08,58.44,-3.07,58.64,-5,58.63,-5.4,58,-5.7,57.5,-5.8,57,-6.2,56.73,-5.6,56.4,-5.7,55.5,-5.8,55.3,-5,55.8,-4.8,55.95,-4.65,55.46,-5,54.9,-4.85,54.63,-3.5,54.9,-3.6,54.55,-3.2,54.1,-3.05,53.82,-3.05,53.4,-3.2,53.35,-3.4,53.35,-4.5,53.4,-4.65,53.3,-4.7,52.85,-4.1,52.55,-4.1,52.3,-5.3,51.9,-5,51.65,-4.3,51.7,-4.2,51.57,-3.2,51.45,-2.7,51.55,-2.95,51.35,-3.1,51.2,-3.45,51.2,-4.1,51.2,-4.52,51,-4.55,50.83,-4.95,50.55,-5.1,50.42,-5.5,50.2]);
+const IE=poly([-6.35,52.2,-6.1,53.35,-6.2,53.7,-5.9,54.2,-5.5,54.65,-6,55.2,-7.3,55.3,-8.3,55.2,-8.5,54.6,-9.9,54.2,-10.1,53.4,-9.9,52.2,-10.4,51.85,-9.6,51.5,-8.2,51.8,-7,52.2]);
+const EU=poly([-5,48.4,-4.5,48.7,-3,48.8,-1.6,48.7,-1.5,49.65,.1,49.5,1.1,49.93,1.6,50.7,1.85,50.95,2.4,51.05,3.4,51.4,4,51.9,4.5,52.4,5,53.2,7,53.6,9,54,9,45,-5,45]);
+const GL=poly([-.3,51.67,-.15,51.68,-.05,51.685,.02,51.645,.1,51.63,.22,51.64,.3,51.6,.33,51.55,.28,51.5,.2,51.48,.22,51.43,.15,51.4,.1,51.35,.05,51.3,-.05,51.3,-.15,51.32,-.25,51.34,-.33,51.37,-.4,51.43,-.5,51.5,-.5,51.55,-.44,51.6,-.35,51.62]);
+thames.push(...L([[.4,51.46],[.55,51.47],[.75,51.5],[.9,51.51]]));
+parks.push(...[[.04,51.66,1.2,3.5,'Epping Forest'],[-.6,51.42,3,2,'Windsor Great Park'],[-.12,51.33,2,1.5,'Banstead Downs'],[-.1795,51.5073,.9,.45,'Kensington Gardens'],[-.1428,51.5067,.3,.25,'Green Park'],[-.1349,51.5025,.45,.2,"St James's Park"],[-.1608,51.5395,.4,.3,'Primrose Hill'],[-.1485,51.4575,.8,.5,'Clapham Common'],[.03,51.56,.9,.6,'Wanstead Flats']].map(p=>[...P(p[0],p[1]),p[2],p[3],p[4]]));
+const WAT=[[[-.1835,51.5215],[-.155,51.5365],[-.1465,51.5415],[-.123,51.536],[-.099,51.5365],[-.056,51.534],[-.036,51.512]],[[-.04,51.66],[-.042,51.6],[-.033,51.56],[-.02,51.53],[-.015,51.51]]].map(L);
+const NAT=[[-.2,51.6,-.42,51.88,-.9,52.24,-1.13,52.63,-1.15,52.95,-1.47,53.38,-1.55,53.8,-1.6,54.5,-1.6,55,-2,55.8,-3.2,55.95,-4.25,55.86],[-.3,51.49,-.97,51.45,-1.78,51.56,-2.59,51.45,-3.18,51.48],[-.35,51.55,-.8,51.65,-1.26,51.75,-1.9,52.3,-1.89,52.48],[-.35,51.42,-1.09,51.27,-1.4,50.9],[-.15,51.3,-.19,51.15,-.14,50.82],[.1,51.4,.52,51.27,1.17,51.08],[.25,51.43,.6,51.38,1.08,51.28],[0,51.62,.05,51.8,.12,52.2],[.15,51.58,.47,51.74,.9,51.89,1.15,52.06],[-1.89,52.48,-2.1,51.9,-2.59,51.45,-3,51.2,-3.53,50.72],[-1.89,52.48,-2.2,52.9,-2.6,53.4,-2.75,54]].map(poly);
+const CITY=[[-.1276,51.507,'London',1],[-1.89,52.48,'Birmingham',1],[-2.24,53.48,'Manchester',1],[-4.25,55.86,'Glasgow',1],[-3.19,55.95,'Edinburgh',1],[-1.55,53.8,'Leeds',1],[-2.99,53.41,'Liverpool',1],[-2.59,51.455,'Bristol',1],[-3.18,51.48,'Cardiff',1],[-5.93,54.6,'Belfast',1],[-1.61,54.98,'Newcastle',1],[-1.47,53.38,'Sheffield',1],[-6.26,53.35,'Dublin',1],[-1.4,50.9,'Southampton',2],[-.137,50.822,'Brighton',2],[-1.258,51.752,'Oxford',2],[.119,52.205,'Cambridge',2],[1.297,52.63,'Norwich',2],[-1.15,52.95,'Nottingham',2],[-4.14,50.37,'Plymouth',2],[-2.1,57.15,'Aberdeen',2],[-4.22,57.48,'Inverness',2],[-3.53,50.72,'Exeter',2],[-1.088,50.8,'Portsmouth',2],[-.97,51.454,'Reading',2],[-.759,52.04,'Milton Keynes',2],[-1.13,52.63,'Leicester',2],[1.08,51.28,'Canterbury',3],[1.31,51.127,'Dover',3],[.52,51.27,'Maidstone',3],[.9,51.889,'Colchester',3],[.47,51.736,'Chelmsford',3],[-.42,51.88,'Luton',3],[-.396,51.655,'Watford',3],[-.34,51.755,'St Albans',3],[-.595,51.51,'Slough',3],[-.61,51.48,'Windsor',3],[-.57,51.236,'Guildford',3],[-.19,51.153,'Gatwick',3],[.71,51.54,'Southend-on-Sea',3],[-1.087,51.266,'Basingstoke',3],[.37,51.44,'Gravesend',3]].map(c=>[...P(c[0],c[1]),c[2],c[3]]);
+const CNT=[[-.4,51.2,'Surrey'],[.65,51.22,'Kent'],[.55,51.78,'Essex'],[-.2,51.88,'Hertfordshire'],[-1.05,51.45,'Berkshire'],[-.78,51.68,'Buckinghamshire'],[.1,50.95,'East Sussex'],[-.55,51,'West Sussex'],[-1.3,51.8,'Oxfordshire'],[-1.3,51.08,'Hampshire'],[1,52.2,'Suffolk'],[.1,52.4,'Cambridgeshire'],[-.45,52.05,'Bedfordshire'],[-.9,52.3,'Northamptonshire'],[-1.9,51.3,'Wiltshire'],[-2.3,50.82,'Dorset'],[1,52.7,'Norfolk'],[-3.7,50.75,'Devon'],[-2.9,51.1,'Somerset'],[-2.3,51.85,'Gloucestershire']].map(c=>[...P(c[0],c[1]),c[2]]);
+const CTRY=[[-1.8,52.8,'ENGLAND'],[-3.8,52.3,'WALES'],[-4.2,56.9,'SCOTLAND'],[-8,53.2,'IRELAND'],[-6.8,54.75,'N. IRELAND'],[2.3,48.5,'FRANCE']].map(c=>[...P(c[0],c[1]),c[2]]);
+const LM=[[-.1246,51.5007,'Big Ben'],[-.1195,51.5033,'London Eye'],[-.1419,51.5014,'Buckingham Palace'],[-.0761,51.5081,'Tower of London'],[-.0754,51.5055,'Tower Bridge'],[-.0984,51.5138,"St Paul's Cathedral"],[-.1269,51.5194,'British Museum'],[-.0994,51.5076,'Tate Modern'],[-.0865,51.5045,'The Shard'],[-.1273,51.4993,'Westminster Abbey'],[-.1281,51.508,'Trafalgar Square'],[-.1774,51.5009,'Royal Albert Hall'],[-.1877,51.5059,'Kensington Palace'],[-.1764,51.4967,'Natural History Museum'],[-.2795,51.556,'Wembley Stadium'],[-.1084,51.5549,'Emirates Stadium'],[-.191,51.4817,'Stamford Bridge'],[-.0166,51.5387,'London Stadium'],[.0032,51.503,'The O2'],[-.4543,51.47,'Heathrow Airport'],[.0553,51.5053,'London City Airport'],[-.2955,51.4787,'Kew Gardens'],[-.1308,51.5942,'Alexandra Palace'],[-.075,51.4189,'Crystal Palace'],[-.3376,51.4037,'Hampton Court Palace'],[-.0015,51.4769,'Royal Observatory'],[-.1445,51.4817,'Battersea Power Station'],[-.1463,51.5415,'Camden Market'],[-.091,51.5055,'Borough Market'],[-.0195,51.5049,'Canary Wharf']].map(c=>[...P(c[0],c[1]),c[2]]);
+const STR=[['Oxford Street',[[-.1595,51.513],[-.1385,51.5154],[-.1306,51.516]]],['Regent Street',[[-.1347,51.51],[-.1415,51.5152]]],['Piccadilly',[[-.143,51.507],[-.1347,51.51]]],['The Strand',[[-.1245,51.5085],[-.1135,51.5112]]],['Fleet Street',[[-.1135,51.5112],[-.103,51.514],[-.0984,51.5138]]],['Whitehall',[[-.1265,51.5005],[-.1281,51.508]]],['The Mall',[[-.1407,51.5025],[-.1304,51.5065]]],['Park Lane',[[-.1527,51.5027],[-.1585,51.513]]],['Euston Road',[[-.1855,51.5215],[-.15,51.525],[-.1233,51.529],[-.105,51.532]]],['Edgware Road',[[-.166,51.513],[-.185,51.548]]],['Cromwell Road',[[-.206,51.4945],[-.174,51.4958],[-.1685,51.496]]],["King's Road",[[-.1595,51.49],[-.19,51.4825]]],['Borough High Street',[[-.094,51.501],[-.088,51.504]]],['Old Kent Road',[[-.087,51.49],[-.045,51.48]]],['Holloway Road',[[-.1055,51.5455],[-.126,51.564]]],['Caledonian Road',[[-.1215,51.53],[-.1185,51.546]]],['Commercial Road',[[-.074,51.512],[-.03,51.513]]],['Mile End Road',[[-.06,51.519],[-.03,51.525]]],['Brixton Road',[[-.113,51.485],[-.1145,51.462]]]].map(a=>[a[0],L(a[1])]);
+function drawLand(){cx.lineJoin='round';
+ for(const [a,c] of [[EU,'#eceef0'],[IE,'#eceef0'],[GB,'#f8f9fa']]){path(a);cx.closePath();cx.fillStyle=c;cx.fill();cx.strokeStyle='#a9c9e3';cx.lineWidth=1.2;cx.stroke()}
+ const r=22*s,g=cx.createRadialGradient(X(C0),Y(C0),0,X(C0),Y(C0),r);g.addColorStop(0,'rgba(206,212,220,.5)');g.addColorStop(.6,'rgba(214,219,226,.28)');g.addColorStop(1,'rgba(220,224,230,0)');cx.fillStyle=g;cx.beginPath();cx.arc(X(C0),Y(C0),r,0,6.283);cx.fill();
+ if(s>=1.2){path(GL);cx.closePath();cx.setLineDash([6,5]);cx.strokeStyle='#9aa0a6';cx.lineWidth=1.2;cx.stroke();cx.setLineDash([])}}
+function drawWater(){if(s<14)return;cx.strokeStyle='#aadaff';cx.lineWidth=Math.max(1.5,.05*s);for(const w of WAT){path(w);cx.stroke()}}
+function drawNat(){if(s<.5||s>=18)return;cx.strokeStyle='#f3c15b';cx.lineWidth=clamp(.05*s+.5,.8,2.4);for(const r of NAT){path(r);cx.stroke()}}
+function localStreets(){if(s<55)return;const st=s>110?.1:.15,x0=Math.max(0,-ox/s),x1=Math.min(W,(cw-ox)/s),y0=Math.max(0,-oy/s),y1=Math.min(H,(ch-oy)/s);cx.beginPath();
+ for(let x=Math.floor(x0/st)*st;x<x1;x+=st)for(let y=Math.floor(y0/st)*st;y<y1;y+=st){if(dens(x,y)<.32)continue;const a=(trn(x/7,y/7)-.5)*2.4,h=Math.abs(Math.sin(x*127.1+y*311.7)*43758.5453)%1,c=Math.cos(a)*st*s,d=Math.sin(a)*st*s,px=x*s+ox,py=y*s+oy;
+  if(h<.66){cx.moveTo(px,py);cx.lineTo(px+c,py+d)}if(h>.34){cx.moveTo(px,py);cx.lineTo(px-d,py+c)}}
+ const w=Math.max(1.4,.03*s);cx.strokeStyle='#e1e4e8';cx.lineWidth=w+1.4;cx.stroke();cx.strokeStyle='#fff';cx.lineWidth=w;cx.stroke()}
+function drawStreets(){if(s<40)return;localStreets();const w=Math.max(2,.05*s);for(const t of STR){path(t[1]);cx.strokeStyle='#d7dadf';cx.lineWidth=w+2;cx.stroke();path(t[1]);cx.strokeStyle='#fff';cx.lineWidth=w;cx.stroke()}}
+function drawGeoLabels(lb){
+ if(s<2.6)for(const c of CTRY)lb(c[2],X(c),Y(c),'#9aa0a6','500 '+(s<1?11:13)+'px Roboto,Arial');
+ if(s>=2&&s<20)for(const c of CNT)lb(c[2].toUpperCase(),X(c),Y(c),'#a8adb3','500 10.5px Roboto,Arial');
+ for(const c of CITY){const t=c[3];if(t===1&&c[2]==='London'&&s>=10)continue;if(t===1?s<.35:t===2?s<1.6:s<5)continue;cx.fillStyle='#80868b';cx.beginPath();cx.arc(X(c),Y(c),t===1?3.5:2.5,0,6.283);cx.fill();lb(c[2],X(c),Y(c)-10,'#3c4043',(t===1?'500 12.5px':t===2?'12px':'11px')+' Roboto,Arial')}
+ if(s>=34)for(const l of LM){const x=X(l),y=Y(l);cx.fillStyle='#e37400';cx.strokeStyle='#fff';cx.lineWidth=2;cx.beginPath();cx.arc(x,y,4.5,0,6.283);cx.fill();cx.stroke();cx.lineWidth=3;cx.strokeStyle='rgba(255,255,255,.9)';if(s>=46)lb(l[2],x,y+13,'#5f6368','11px Roboto,Arial')}
+ if(s>=62)for(const t of STR){const i=Math.floor((t[1].length-1)/2),a=t[1][i],b=t[1][i+1];let g=Math.atan2(Y(b)-Y(a),X(b)-X(a));if(g>1.5708||g<-1.5708)g+=3.1416;cx.save();cx.translate((X(a)+X(b))/2,(Y(a)+Y(b))/2);cx.rotate(g);lb(t[0],0,0,'#5f6368','11px Roboto,Arial');cx.restore()}}
+// ---- Tube diagram (original schematic, TfL-style principles)
+const hs=t=>{let h=2166136261;for(let i=0;i<t.length;i++)h=Math.imul(h^t.charCodeAt(i),16777619);return h>>>0};
+const ST={};"Ealing Broadway,2,20,-.3018,51.5149;North Acton,6,20,-.2597,51.5238;White City,10,20,-.2247,51.512;Shepherd's Bush,12,20,-.2187,51.5043;Holland Park,14,20,-.206,51.507;Notting Hill Gate,16,20,-.196,51.509;Queensway,18,20,-.187,51.5107;Lancaster Gate,20,20,-.175,51.512;Marble Arch,22,20,-.158,51.513;Bond Street,24,20,-.149,51.5142;Oxford Circus,26,20,-.1415,51.5152;Tottenham Court Road,28,20,-.131,51.5165;Holborn,30,20,-.12,51.5174;Chancery Lane,32,20,-.111,51.5185;St Paul's,34,20,-.0973,51.5146;Bank,36,20,-.0886,51.5133;Liverpool Street,38,20,-.0823,51.5178;Bethnal Green,40,20,-.0549,51.527;Mile End,43,20,-.0332,51.5251;Stratford,46,16,-.0042,51.5416;Leytonstone,49,13,.0083,51.5681;Woodford,52,10,.034,51.607;Archway,28,4,-.1347,51.5655;Camden Town,28,8,-.1426,51.5392;Euston,28,12,-.1337,51.5282;Warren Street,28,14,-.1384,51.5247;Goodge Street,28,17,-.1347,51.5205;Leicester Square,28,22,-.1281,51.5113;Embankment,30,25,-.1223,51.5074;Waterloo,33,28,-.1143,51.5031;Kennington,33,31,-.1053,51.4884;Oval,33,33,-.1124,51.4819;Stockwell,30,35,-.1228,51.4723;Clapham North,28,37,-.1299,51.4648;Clapham Common,26,39,-.1384,51.4618;Balham,26,41,-.1525,51.4431;King's Cross St Pancras,31,11,-.1233,51.5308;Angel,34,11,-.1058,51.5322;Old Street,36,13,-.0875,51.5263;Moorgate,36,16,-.0886,51.5186;London Bridge,37,25,-.0864,51.5052;Borough,36,27,-.0943,51.5011;Elephant & Castle,35,30,-.0988,51.4943;Walthamstow Central,44,4,-.0198,51.583;Tottenham Hale,41,4,-.0603,51.5882;Seven Sisters,38,4,-.0749,51.5822;Finsbury Park,34,7,-.1064,51.5642;Highbury & Islington,33,9,-.1045,51.546;Green Park,26,24,-.1428,51.5067;Victoria,26,29,-.1448,51.4965;Vauxhall,28,32,-.1253,51.4861;Brixton,32,38,-.1145,51.4627;Wembley Park,14,6,-.2792,51.5635;Finchley Road,18,10,-.1803,51.5472;Baker Street,22,14,-.1575,51.5226;Westminster,30,28,-.1254,51.501;Southwark,35,26,-.1048,51.5042;Bermondsey,40,26,-.0637,51.4979;Canada Water,42,26,-.0502,51.4982;Canary Wharf,45,26,-.0209,51.5051;North Greenwich,48,28,.0039,51.5005;Canning Town,50,25,.0276,51.5147;West Ham,50,21,.0053,51.5287;Heathrow Terminal 5,2,29,-.4905,51.4724;Hammersmith,9,27,-.2249,51.4927;Earl's Court,13,27,-.1934,51.492;Gloucester Road,16,27,-.1829,51.4945;South Kensington,18,27,-.1741,51.4941;Knightsbridge,20,25,-.1607,51.5015;Hyde Park Corner,22,24,-.1527,51.5027;Piccadilly Circus,28,24,-.1347,51.51;Covent Garden,30,22,-.1243,51.5129;Russell Square,30,16,-.1244,51.5231;Arnos Grove,34,3,-.1336,51.6165;Cockfosters,34,0,-.1496,51.6517;Sloane Square,22,27,-.1565,51.4924;Blackfriars,33,22,-.1031,51.512;Cannon Street,37,22,-.0904,51.5113;Tower Hill,39,22,-.0766,51.5098;Whitechapel,41,23,-.0612,51.5195;Farringdon,34,14,-.1053,51.5203;Paddington,18,16,-.1755,51.5154;Bayswater,17,18,-.188,51.5122;High Street Kensington,16,24,-.1925,51.5009;Queen's Park,14,12,-.2047,51.5342;Warwick Avenue,16,14,-.1835,51.5235;Edgware Road,20,16,-.1699,51.5199;Regent's Park,24,16,-.1466,51.5234;Lambeth North,34,29,-.1115,51.4991;Acton Main Line,12,16,-.2677,51.517".split(';').forEach(r=>{const a=r.split(',');ST[a[0]]={x:+a[1],y:+a[2],lon:+a[3],lat:+a[4],ln:[],nb:[],pen:99}});
+const TL=[['Central','#e32017',14,'Ealing Broadway,North Acton,White City,Shepherd\'s Bush,Holland Park,Notting Hill Gate,Queensway,Lancaster Gate,Marble Arch,Bond Street,Oxford Circus,Tottenham Court Road,Holborn,Chancery Lane,St Paul\'s,Bank,Liverpool Street,Bethnal Green,Mile End,Stratford,Leytonstone,Woodford'],
+['Northern','#1d1d1b',14,'Archway,Camden Town,Euston,Warren Street,Goodge Street,Tottenham Court Road,Leicester Square,Embankment,Waterloo,Kennington,Oval,Stockwell,Clapham North,Clapham Common,Balham','Euston,King\'s Cross St Pancras,Angel,Old Street,Moorgate,Bank,London Bridge,Borough,Elephant & Castle,Kennington'],
+['Victoria','#0098d4',14,'Walthamstow Central,Tottenham Hale,Seven Sisters,Finsbury Park,Highbury & Islington,King\'s Cross St Pancras,Euston,Warren Street,Oxford Circus,Green Park,Victoria,Vauxhall,Stockwell,Brixton'],
+['Jubilee','#a0a5a9',14,'Wembley Park,Finchley Road,Baker Street,Bond Street,Green Park,Westminster,Waterloo,Southwark,London Bridge,Bermondsey,Canada Water,Canary Wharf,North Greenwich,Canning Town,West Ham,Stratford'],
+['Piccadilly','#003688',14,'Heathrow Terminal 5,Hammersmith,Earl\'s Court,Gloucester Road,South Kensington,Knightsbridge,Hyde Park Corner,Green Park,Piccadilly Circus,Leicester Square,Covent Garden,Holborn,Russell Square,King\'s Cross St Pancras,Finsbury Park,Arnos Grove,Cockfosters'],
+['District','#00782a',9,'Earl\'s Court,Gloucester Road,South Kensington,Sloane Square,Victoria,Westminster,Embankment,Blackfriars,Cannon Street,Tower Hill,Whitechapel,Mile End'],
+['Circle','#ffd300',9,'Gloucester Road,South Kensington,Sloane Square,Victoria,Westminster,Embankment,Blackfriars,Cannon Street,Tower Hill,Liverpool Street,Moorgate,Farringdon,King\'s Cross St Pancras,Baker Street,Paddington,Bayswater,Notting Hill Gate,High Street Kensington,Gloucester Road'],
+['Bakerloo','#b36305',14,'Queen\'s Park,Warwick Avenue,Paddington,Edgware Road,Baker Street,Regent\'s Park,Oxford Circus,Piccadilly Circus,Embankment,Waterloo,Lambeth North,Elephant & Castle'],
+['Elizabeth','#6950a1',4,'Acton Main Line,Paddington,Bond Street,Tottenham Court Road,Farringdon,Liverpool Street,Whitechapel,Stratford','Whitechapel,Canary Wharf']];
+const octi=(a,b)=>{const dx=b.x-a.x,dy=b.y-a.y,ax=Math.abs(dx),ay=Math.abs(dy),d=Math.min(ax,ay),m=ax>ay?[a.x+Math.sign(dx)*(ax-d),a.y]:[a.x,a.y+Math.sign(dy)*(ay-d)];return[[a.x,a.y],m,[b.x,b.y]].filter((p,i,r)=>!i||p[0]!==r[i-1][0]||p[1]!==r[i-1][1])};
+const STEPS=[],KS={};
+TL.forEach((l,li)=>{for(const str of l.slice(3)){const n=str.split(',');n.forEach((q,i)=>{const t=ST[q];if(!t.ln.includes(l[0]))t.ln.push(l[0]);t.pen=Math.min(t.pen,l[2]);if(i){const p=ST[n[i-1]];if(!t.nb.includes(n[i-1]))t.nb.push(n[i-1]);if(!p.nb.includes(q))p.nb.push(q);
+ const pts=octi(p,t);for(let j=1;j<pts.length;j++){const u=pts[j-1],v=pts[j],c=Math.max(Math.abs(v[0]-u[0]),Math.abs(v[1]-u[1])),sx=Math.sign(v[0]-u[0]),sy=Math.sign(v[1]-u[1]);for(let k=0;k<c;k++){let x1=u[0]+sx*k,y1=u[1]+sy*k,x2=x1+sx,y2=y1+sy;if(x1>x2||(x1===x2&&y1>y2))[x1,y1,x2,y2]=[x2,y2,x1,y1];const key=[x1,y1,x2,y2]+'';(KS[key]=KS[key]||[]).includes(li)||KS[key].push(li);STEPS.push({key,x1,y1,x2,y2,li,a:n[i-1],b:q})}}}})}});
+STEPS.forEach(t=>{const a=KS[t.key];t.o=a.indexOf(t.li)-(a.length-1)/2});
+for(const n in ST){const t=ST[n],o=ST[t.nb[0]];t.h=Math.abs(o.y-t.y)<Math.abs(o.x-t.x)}
+const RIV=[[-2,33],[8,32],[18,31],[24,31],[28,30],[31,28],[33,26],[35,25],[38,24],[41,24],[44,24],[47,24],[52,27],[56,28]];
+function stDbm(n,k=sel){if(k==='best')return Math.max(...Object.keys(PROV).map(q=>stDbm(n,q)));const t=ST[n];return Math.min(-62,dbmAt(k,P(t.lon,t.lat))-t.pen-(rng(hs(k+tech+n))()-.5)*12)}
+const nearSt=p=>Object.keys(ST).reduce((b,n)=>{const q=P(ST[n].lon,ST[n].lat),r=P(ST[b].lon,ST[b].lat);return Math.hypot(q[0]-p[0],q[1]-p[1])<Math.hypot(r[0]-p[0],r[1]-p[1])?n:b});
+function bfs(a,b){const pr={[a]:null},q=[a];while(q.length){const n=q.shift();if(n===b)break;for(const m of ST[n].nb)if(!(m in pr)){pr[m]=n;q.push(m)}}const o=[];for(let n=b;n;n=pr[n])o.unshift(n);return o}
+function drawTube(){cx.fillStyle='#fff';cx.fillRect(0,0,cw,ch);cx.lineJoin=cx.lineCap='round';const V={};for(const n in ST)V[n]=stDbm(n);const lw=Math.max(3,Math.min(12,.3*s));
+ cx.strokeStyle='#d3e7f8';cx.lineWidth=Math.max(6,1.1*s);path(RIV);cx.stroke();
+ if(TP.length>1){cx.strokeStyle='rgba(26,115,232,.3)';cx.lineWidth=lw*2.8;for(let i=1;i<TP.length;i++){path(octi(ST[TP[i-1]],ST[TP[i]]));cx.stroke()}}
+ const q=(t,w)=>{const dx=t.x2-t.x1,dy=t.y2-t.y1,l=Math.hypot(dx,dy),o=t.o*w;return[ox+t.x1*s-dy/l*o,oy+t.y1*s+dx/l*o,ox+t.x2*s-dy/l*o,oy+t.y2*s+dx/l*o]};
+ for(const pass of[0,1])for(const t of STEPS){const p=q(t,lw*1.08);cx.beginPath();cx.moveTo(p[0],p[1]);cx.lineTo(p[2],p[3]);if(!pass){const bd=BAD[TL[t.li][0]]>1;cx.strokeStyle=bd?'#b9bec4':TL[t.li][1];cx.lineWidth=lw;cx.setLineDash(bd?[lw*1.2,lw*.9]:[])}else{cx.setLineDash([]);const c=col((V[t.a]+V[t.b])/2);cx.strokeStyle=`rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;cx.lineWidth=lw*.4}cx.stroke()}
+ cx.setLineDash([]);const r=Math.max(3,Math.min(8,.2*s));
+ for(const n in ST){const t=ST[n],x=ox+t.x*s,y=oy+t.y*s,ic=t.ln.length>1,c=col(V[n]);cx.beginPath();cx.arc(x,y,ic?r*1.5:r,0,6.283);cx.fillStyle='#fff';cx.fill();cx.strokeStyle='#202124';cx.lineWidth=ic?2.2:1.6;cx.stroke();cx.beginPath();cx.arc(x,y,r*.62,0,6.283);cx.fillStyle=`rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;cx.fill()}
+ if(s>=7){cx.textBaseline='middle';cx.textAlign='left';cx.lineWidth=3;cx.strokeStyle='rgba(255,255,255,.92)';
+  for(const n in ST){const t=ST[n],ic=t.ln.length>1;if(s<11&&!ic)continue;cx.font=(ic?'700 ':'500 ')+Math.max(10,Math.min(13,.7*s))+'px Roboto,Arial';cx.fillStyle='#202124';cx.save();cx.translate(ox+t.x*s,oy+t.y*s);if(t.h)cx.rotate(-.785);const d=r*(ic?1.5:1)+5;cx.strokeText(n,d,0);cx.fillText(n,d,0);cx.restore()}}
+ if(TP.length>1){const a=ST[TP[0]];cx.fillStyle='#34a853';cx.strokeStyle='#fff';cx.lineWidth=2;cx.beginPath();cx.arc(ox+a.x*s,oy+a.y*s-14,6,0,6.283);cx.fill();cx.stroke();const b=ST[TP[TP.length-1]];pin([b.x,b.y],'#ea4335')}}
+
+// ===== merged app: Morning Rush Planner + Map + Tube =====
+const $=id=>document.getElementById(id),trn=lat(99,40),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),HR=()=>7.75,eff=()=>tab==='tube';
+let tab='plan',cur='normal',route=null,TP=[],BAD={},TB=0,sheet='peek',LY={traf:true,sig:false},SV={},mark=null;
+const cong=(x,y,h)=>clamp(peak(h)*(.4+.7*Math.exp(-Math.hypot(x-C0[0],y-C0[1])/14))+(trn(x/2,y/2)-.5)*.5+TB*.3,0,1);
+const lvl=d=>d>-80?['Strong',5]:d>-90?['Good',4]:d>-100?['Fair',3]:d>-110?['Weak',2]:d>-118?['Very weak',1]:['No signal',0];
+const rgb=d=>{const c=col(d);return`rgb(${c[0]|0},${c[1]|0},${c[2]|0})`},STXT=['Good service','Minor delays','Severe delays','Part suspended'],dest=()=>cur==='dest'?'Shoreditch':'Canary Wharf';
+const GE={walk1:[[-.119,51.448],[-.1175,51.4525]],bus:[[-.1175,51.4525],[-.1145,51.4627],[-.1105,51.477],[-.1053,51.4884],[-.1088,51.4975],[-.1143,51.5031]],jub:[[-.1143,51.5031],[-.1048,51.5042],[-.0864,51.5052],[-.0637,51.4979],[-.0502,51.4982],[-.0209,51.5051]],wc:[[-.1143,51.5031],[-.1031,51.511],[-.0886,51.5133]],dlr:[[-.0886,51.5133],[-.0569,51.5112],[-.0396,51.5123],[-.0203,51.5071],[-.0209,51.5051]],nor:[[-.1143,51.5031],[-.1031,51.512],[-.0886,51.5133],[-.0886,51.5186],[-.0875,51.5263]],walk2:[[-.0209,51.5051],[-.014,51.504]],walk3:[[-.0875,51.5263],[-.0775,51.5246]]};GE.rep=GE.jub;
+const LC={walk1:'#1a73e8',walk2:'#1a73e8',walk3:'#1a73e8',bus:'#dc241f',jub:'#a0a5a9',wc:'#95cdba',dlr:'#00a4a7',nor:'#1d1d1b',rep:'#dc241f'};
+const JT=['Waterloo','Southwark','London Bridge','Bermondsey','Canada Water','Canary Wharf'],NL=['walk1','bus','jub','walk2'];
+const X2={normal:{l:NL,tp:JT},rain:{l:NL,tp:JT},dis:{l:['walk1','bus','wc','chg','dlr','walk2'],tp:['Waterloo','Bank','Canary Wharf'],bad:{Jubilee:2}},traf:{l:NL,tp:JT,tb:1},long:{l:NL,tp:JT,tb:.8},late:{l:NL,tp:JT},fast:{l:NL,tp:JT,tb:-.6},slow:{l:NL,tp:JT,tb:.4},none:{l:['walk1','bus','rep','walk2'],tp:JT,bad:{Jubilee:3},tb:.6},dest:{l:['walk1','bus','nor','walk3'],tp:['Waterloo','Bank','Moorgate','Old Street']}};
+function buildRoute(){const x=X2[cur],q=S[cur];let t=m(q.leave);const legs=q.steps.map((st,i)=>{const g=x.l[i],pts=GE[g]?L(GE[g]):null,o={t,g,pts,mins:st[0],name:st[1],rng:st[2],col:LC[g]||'#5f6368',walk:g.startsWith('walk')};t+=st[0];if(pts){const v=pts.map(p=>dbmAt(sel,p)-(/jub|wc|nor/.test(g)?14:0));o.sig=v.reduce((a,b)=>a+b)/v.length}return o});route={legs,end:t,all:legs.flatMap(l=>l.pts||[])};TP=x.tp;BAD=x.bad||{};TB=x.tb||0}
+// ---- canvas
+const cv=$('map'),cx=cv.getContext('2d');let cw=0,ch=0,dpr=1,s=18,ox=0,oy=0;
+function resize(){dpr=window.devicePixelRatio||1;cw=cv.clientWidth;ch=cv.clientHeight;cv.width=cw*dpr;cv.height=ch*dpr}
+const X=p=>p[0]*s+ox,Y=p=>p[1]*s+oy;
+function path(a){cx.beginPath();a.forEach((p,i)=>i?cx.lineTo(X(p),Y(p)):cx.moveTo(X(p),Y(p)))}
+function drawRoute(){if(!route)return;cx.lineJoin=cx.lineCap='round';for(const l of route.legs){if(!l.pts)continue;path(l.pts);cx.strokeStyle='#fff';cx.lineWidth=l.walk?8:12;cx.stroke();path(l.pts);cx.strokeStyle=l.col;cx.lineWidth=l.walk?4.5:7;if(l.walk)cx.setLineDash([.1,9]);cx.stroke();cx.setLineDash([])}
+ const a=route.all[0],b=route.all[route.all.length-1];cx.fillStyle='#fff';cx.beginPath();cx.arc(X(a),Y(a),9,0,6.283);cx.fill();cx.fillStyle='#1a73e8';cx.beginPath();cx.arc(X(a),Y(a),6,0,6.283);cx.fill();pin(b,'#ea4335')}
+function draw(){if(tab==='plan'||!cw)return;cx.setTransform(dpr,0,0,dpr,0,0);if(eff()){drawTube();return}
+ cx.fillStyle='#bcdcf3';cx.fillRect(0,0,cw,ch);drawLand();
+ cx.fillStyle='#c8e6c9';for(const k of parks){cx.beginPath();cx.ellipse(X(k),Y(k),k[2]*s,k[3]*s,0,0,6.283);cx.fill()}
+ cx.lineJoin=cx.lineCap='round';cx.strokeStyle='#aadaff';cx.lineWidth=Math.max(s<6?1.2:3,.22*s);path(thames);cx.stroke();drawWater();
+ if(LY.sig){cx.globalAlpha=.7;cx.imageSmoothingEnabled=true;cx.drawImage(heat(sel),ox,oy,GW*CS*s,GH*CS*s);cx.globalAlpha=1}
+ const rd=(a,w,c,cs)=>{cx.strokeStyle=cs;cx.lineWidth=w+2;path(a);cx.stroke();cx.strokeStyle=c;cx.lineWidth=w;path(a);cx.stroke()};
+ drawNat();drawStreets();if(s>=4)for(const r of roads)rd(r,Math.max(2,.09*s),'#fff','#9aa0a6');if(s>=3)rd(m25,Math.max(2.5,.1*s),'#fcc34b','#e0a030');
+ if(LY.traf)trafficDraw();drawRoute();
+ cx.textAlign='center';cx.textBaseline='middle';cx.lineWidth=3;cx.strokeStyle='rgba(255,255,255,.9)';
+ const lb=(t,x,y,c,f)=>{cx.font=f;cx.fillStyle=c;cx.strokeText(t,x,y);cx.fillText(t,x,y)};
+ if(s>20){if(s>28)for(const k of parks)lb(k[4],X(k),Y(k),'#188038','italic 11px Roboto,Arial');lb('River Thames',X(P(-.17,51.4825)),Y(P(-.17,51.4825))+14,'#4285f4','italic 11px Roboto,Arial')}
+ if(s>5)lb('M25',X(P(-.14,51.69)),Y(P(-.14,51.69)),'#b06000','500 11px Roboto,Arial');
+ for(const p of places)if(p[3]===1?s>=7:s>=16)lb(p[2],X(p),Y(p),p[3]===1?'#3c4043':'#5f6368',(p[3]===1?'500 12.5px':'11.5px')+' Roboto,Arial');
+ drawGeoLabels(lb);if(s>10)lb('LONDON',X(C0),Y(C0)-s*2.2,'#80868b','500 '+Math.min(22,s*.9)+'px Roboto,Arial');
+ if(mark)pin(mark,'#ea4335')}
+function zoom(f,x,y){const n=clamp(s*f,eff()?5:.35,eff()?60:220);ox=x-(x-ox)*n/s;oy=y-(y-oy)*n/s;s=n;draw()}
+const ptr=new Map();let moved=0;const rc=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,rc(e));moved=0});
+cv.addEventListener('pointermove',e=>{if(!ptr.has(e.pointerId))return;const o=ptr.get(e.pointerId),n=rc(e);
+ if(ptr.size===1){ox+=n[0]-o[0];oy+=n[1]-o[1];moved+=Math.abs(n[0]-o[0])+Math.abs(n[1]-o[1])}
+ else{const q=[...ptr.entries()].find(a=>a[0]!==e.pointerId)[1],d0=Math.hypot(o[0]-q[0],o[1]-q[1]),d1=Math.hypot(n[0]-q[0],n[1]-q[1]);moved+=99;zoom(d1/d0,(n[0]+q[0])/2,(n[1]+q[1])/2)}
+ ptr.set(e.pointerId,n);draw()});
+cv.addEventListener('pointerup',e=>{ptr.delete(e.pointerId);if(moved<6&&!ptr.size){const p=rc(e);pick(p[0],p[1])}});
+cv.addEventListener('pointercancel',e=>ptr.delete(e.pointerId));
+cv.addEventListener('wheel',e=>{e.preventDefault();const p=rc(e);zoom(e.deltaY<0?1.2:1/1.2,p[0],p[1])},{passive:false});
+$('zi').onclick=()=>zoom(1.4,cw/2,ch/2);$('zo').onclick=()=>zoom(1/1.4,cw/2,ch/2);
+const provRows=fn=>Object.entries(PROV).map(([k,v])=>{const d=fn(k),[t,n]=lvl(d);return`<div class="pr"><span class="dot" style="background:${v.c}"></span><span class="nm">${v.name}</span><span class="bars">${[1,2,3,4,5].map(i=>`<i style="height:${i*20}%;${i<=n?'background:'+(n>3?'#1e8e3e':n>2?'#f9ab00':'#d93025'):''}"></i>`).join('')}</span><span class="v">${t} · ${Math.round(d)} dBm</span></div>`}).join('');
+function card(h){$('card').innerHTML=h?h+'<button class="x" onclick="card();mark=null;draw()">×</button>':'';$('card').style.display=h?'block':'none'}
+function pick(px,py){if(eff())return tubePick(px,py);if(!LY.sig){card();return}const p=[(px-ox)/s,(py-oy)/s];if(p[0]<0||p[1]<0||p[0]>=W||p[1]>=H){card();mark=null;return draw()}mark=p;card(`<h3>Signal here</h3><p>${tech} · tap elsewhere to compare</p>`+provRows(k=>dbmAt(k,p)));draw()}
+function tubePick(px,py){let b=null,bd=22;for(const n in ST){const d=Math.hypot(ox+ST[n].x*s-px,oy+ST[n].y*s-py);if(d<bd){bd=d;b=n}}if(!b)return card();card(`<h3>${b}</h3><p>${ST[b].ln.join(' · ')} · ${tech} (underground estimate)</p>`+provRows(k=>stDbm(b,k)))}
+function fitBox(x0,y0,x1,y1,mw,mh){const top=tab==='tube'?150:130,bot=(sheet==='full'?ch*.54:178)+80,hh=ch-top-bot;s=clamp(Math.min((cw-50)/Math.max(x1-x0,mw),hh/Math.max(y1-y0,mh)),eff()?5:4,eff()?60:150);ox=cw/2-(x0+x1)/2*s;oy=top+hh/2-(y0+y1)/2*s}
+function fitRoute(){const a=route.all;fitBox(Math.min(...a.map(p=>p[0])),Math.min(...a.map(p=>p[1])),Math.max(...a.map(p=>p[0])),Math.max(...a.map(p=>p[1])),.8,.8)}
+function fitTube(){const a=(TP.length?TP:Object.keys(ST)).map(n=>ST[n]);fitBox(Math.min(...a.map(p=>p.x)),Math.min(...a.map(p=>p.y)),Math.max(...a.map(p=>p.x)),Math.max(...a.map(p=>p.y)),16,12)}
+// ---- UI
+const tgt=t=>/Jubilee|Northern|Bank|DLR|line|Rerouted/i.test(t)?'tube':/traffic|bus|road/i.test(t)?'traf':/walk|Dry|rain/i.test(t)?'map':'';
+function renderPlan(){const q=S[cur],lv=m(q.leave),arr=q.arrT||f(m(q.arr))+' '+ap(m(q.arr)),
+ wk=q.now?`<div class="lab">IT’S NOW</div><div class="big">${T(m(q.now))}</div><div class="meta">Planned wake-up was 6:55 AM</div>`:`<div class="lab">WAKE UP</div><div class="big">${T(m(q.wake))}</div>${q.oldW?`<div class="was">was ${f(m(q.oldW))} AM</div>`:''}`;let t=lv;
+ const steps=q.steps.map(x=>{const r=`<div class="step"><time>${f(t)}</time><div>${x[1]}<small>${x[2]}</small></div></div>`;t+=x[0];return r}).join('')+`<div class="step"><time>${f(t)}</time><div><b>Arrive</b><small>${q.arrT?'Uncertain: 8:40–9:20':'Due '+q.due+' · usually '+q.rng}</small></div></div>`;
+ const alts=cur==='none'||cur==='late'?'':`<div class="h">OTHER OPTIONS</div><div class="alt"><div>Most reliable<small>Extra 8 min buffer</small></div><b>Leave ${f(lv-8)}</b></div><div class="alt"><div>Latest wake-up<small>Thinner buffer, 3 min to spare</small></div><b>Leave ${f(lv+10)}</b></div>`;
+ $('plan').innerHTML=`<div class="top"><b>Monday morning</b><span>To ${dest()} · due ${q.due}</span></div>${q.banner?`<div class="banner t-${q.banner[0]}"><b>${q.banner[1]}</b>${q.banner[2]}</div>`:''}
+ <section class="hero">${wk}<div class="row2"><div><div class="lab">LEAVE</div><div class="mid">${T(lv)}</div>${q.oldL?`<div class="was">was ${f(m(q.oldL))} AM</div>`:''}</div><div><div class="lab">ARRIVE</div><div class="mid" style="${q.arrT?'font-size:30px;padding-top:9px':''}">${q.arrT||T(m(q.arr))}</div><div class="meta">${q.arrT?'low confidence':'due '+q.due}</div></div></div>
+ <div class="dur">${q.arrT?'55–95 min':q.dur+' min'} journey <span>${q.arrT?'very uncertain':'usually '+q.rng}</span></div>${q.pill?`<span class="pill t-${q.pill[0]}">${q.pill[1]}</span>`:''}</section>
+ <ul class="why">${q.why.map(w=>{const g=tgt(w[1]);return`<li class="${g?'go':''}" ${g?`onclick="goTo('${g}')"`:''}><i class="d-${w[0]}"></i><span>${w[1]}</span>${g?'<em>›</em>':''}</li>`}).join('')}</ul>
+ <div class="watch"><b>WHAT COULD CHANGE THIS</b>${q.watch}</div><button class="cta" onclick="goTo('start')">${q.cta}</button>${q.link?`<button class="link">${q.link}</button>`:''}
+ <details class="more"><summary>Explore your journey</summary>${steps}<div class="two2"><button onclick="goTo('map')">View on map</button><button onclick="goTo('tube')">View on Tube map</button></div>${alts}</details>`;
+ $('pre').innerHTML=Object.keys(S).map(k=>`<button class="${k===cur?'on':''}" onclick="setScenario('${k}')">${S[k].l}</button>`).join('')}
+function goTo(g){if(g==='traf')LY.traf=true;if(g==='start'){sheet='full';applySheet();g='map'}setTab(g==='tube'?'tube':'map')}
+function setScenario(k){cur=k;SV={};buildRoute();renderPlan();if(tab!=='plan'){tab==='tube'?fitTube():fitRoute();renderMapUI();draw()}}
+function lyr(k){LY[k]=!LY[k];renderMapUI();draw()}
+function selP(k){sel=k;buildRoute();renderPlan();renderMapUI();draw()}
+function setTech(t){tech=t;buildRoute();renderMapUI();draw()}
+function provUI(){const on=(tab==='map'&&LY.sig)||tab==='tube',p=$('prov');p.style.display=on?'block':'none';if(!on)return;
+ p.innerHTML='<div class="chips">'+[['best','All networks','conic-gradient(#00a5a3,#e60000,#1c3fd1,#7a2bd1,#00a5a3)'],...Object.entries(PROV).map(([k,v])=>[k,v.name,v.c])].map(c=>`<button class="chip ${sel===c[0]?'on':''}" onclick="selP('${c[0]}')"><span class="dot" style="background:${c[2]}"></span>${c[1]}</button>`).join('')+['4G','5G'].map(t=>`<button class="chip ${tech===t?'on':''}" onclick="setTech('${t}')">${t}</button>`).join('')+'</div><div class="leg"><span>Weak</span><i></i><span>Strong</span></div>'}
+function sheetUI(){const q=S[cur],lv=m(q.leave),nb=q.banner?`<div class="note t-${q.banner[0]}"><b>${q.banner[1]}.</b> ${q.banner[2]}</div>`:'';let h;
+ if(tab==='map'){h=`<div class="sh-t">${f(lv)}<small>${ap(lv)} · leave</small></div><div class="sh-s">${q.arrT?'55–95 min, very uncertain':q.dur+' min'} · arrive ${q.arrT||f(m(q.arr))} · due ${q.due}</div>${nb}<div class="cond"><span>${q.why[1][1].replace(/\.$/,'')}</span><span>${q.why[2][1].replace(/\.$/,'')}</span></div><div class="full-only">${route.legs.map(l=>`<div class="leg-r"><time>${f(l.t)}</time><i style="background:${l.col};${l.walk?'opacity:.45':''}"></i><div><b>${l.name}</b><small>${l.rng}</small></div>${l.sig!=null?`<span class="sg"><u style="background:${rgb(l.sig)}"></u>${lvl(l.sig)[0]}</span>`:''}</div>`).join('')}<div class="leg-r"><time>${f(route.end)}</time><i style="background:#ea4335"></i><div><b>Arrive at ${dest()}</b><small>Due ${q.due}</small></div></div><p class="sub">Signal shown for ${sel==='best'?'all networks':PROV[sel].name} (${tech}). Underground values are simulated.</p></div>`}
+ else{const w=TP.map(n=>stDbm(n)).filter(d=>d<-100).length;h=(TP.length?`<div class="sh-t" style="font-size:20px">${TP[0]} → ${TP[TP.length-1]}</div><div class="sh-s">${TP.length} stations · ${w?w+' with weak signal':'signal fine throughout'}</div>`:'')+nb+`<div class="full-only"><div class="h">LINE STATUS</div>${TL.map(l=>{const b=BAD[l[0]]||0;return`<div class="stt"><i style="background:${l[1]}"></i><span>${l[0]}${b?`<small>${b>2?'Suspended between Waterloo and Stratford':'Signal failure at Waterloo'}</small>`:''}</span><b style="color:${SC[b]};font-size:13px">${STXT[b]}</b></div>`}).join('')}<p class="sub">Dots show estimated signal inside stations; dashed grey lines are disrupted.</p></div>`}
+ $('shc').innerHTML=h}
+function renderMapUI(){const q=S[cur];$('srch').innerHTML=`<span class="bk">‹</span><span><b>To ${dest()}</b><small>Leave ${f(m(q.leave))} · due ${q.due}</small></span><span class="av">R</span>`;
+ $('mchips').innerHTML=[['traf','🚦','Traffic'],['sig','📶','Signal']].map(c=>`<button class="chip ${LY[c[0]]?'on':''}" onclick="lyr('${c[0]}')">${c[1]} ${c[2]}</button>`).join('')+(cur==='rain'?'<span class="chip info">☂ Rain 7:40–9:00</span>':'');
+ $('tsub').textContent=`Signal at stations · ${sel==='best'?'All networks':PROV[sel].name} · ${tech}`;provUI();sheetUI()}
+function applySheet(){$('sheet').className='sheet '+sheet;$('app').style.setProperty('--sh',sheet==='full'?'54dvh':'178px')}
+$('grab').onclick=()=>{sheet=sheet==='full'?'peek':'full';applySheet()};$('srch').onclick=()=>setTab('plan');$('fit').onclick=()=>{tab==='tube'?fitTube():fitRoute();draw()};
+function setTab(t){if(tab!=='plan')SV[tab]={s,ox,oy};tab=t;$('app').dataset.tab=t;document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));card();mark=null;
+ if(t==='plan'){$('v-plan').scrollTop=0;return}resize();const v=SV[t];if(v){s=v.s;ox=v.ox;oy=v.oy}else t==='map'?fitRoute():fitTube();renderMapUI();draw()}
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>setTab(b.dataset.t));
+addEventListener('resize',()=>{if(tab!=='plan'){resize();draw()}});
+buildRoute();renderPlan();applySheet();
+
+</script></body></html>
